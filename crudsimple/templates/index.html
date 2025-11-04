@@ -1,0 +1,132 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Inicio - Mi Sitio Web</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+    <link rel="stylesheet" href="{% static 'css/styles.css' %}?v=1.0">
+
+
+</head>
+<body>
+
+    <!-- Incluir header -->
+    {% include "includes/header.html" %}
+
+    <!-- Banner estático -->
+    <div class="static-banner">
+        <img class="d-block w-100 banner-image" src="{% static 'img/banner2.png' %}" alt="Banner" style="height: 470px; object-fit: cover;">
+        <div class="overlay-content">
+            <h1>¿Buscas Algún Familiar o Conocido?</h1>
+            
+            <!-- Formulario de Búsqueda -->
+            <form id="searchForm" class="search-form" onsubmit="return buscarFallecido(event)">
+
+                <div class="input-group">
+
+                    <input type="text" name="nombre" placeholder="Nombre" class="form-control">
+                    <input type="text" name="apellido_p" placeholder="Apellido Paterno" class="form-control">
+                    <input type="text" name="apellido_m" placeholder="Apellido Materno" class="form-control">
+                    
+                    <!-- Separador -->
+                    <span class="input-group-text separator-icon"><i class="fas fa-exchange-alt"></i></span>
+                    
+                    <input type="text" name="rut" placeholder="RUT" class="form-control">
+                    <button type="submit" class="btn btn-search"><i class="fas fa-search"></i></button>
+                </div>
+            </form>
+
+            <!-- Script para la búsqueda y mostrar popup -->
+            <script>
+                function buscarFallecido(event) {
+                    event.preventDefault(); // Prevenir el envío normal del formulario
+
+                    const form = document.getElementById('searchForm');
+                    const formData = new FormData(form);
+                    const params = new URLSearchParams(formData).toString();
+
+                    fetch(`/buscar-fallecido/?${params}`)
+                        .then(response => response.json())
+                        .then(data => {
+                            if (data.resultados.length > 0) {
+                                mostrarPopup(data.resultados);
+                            } else {
+                                mostrarPopup([{ nombre: "No se encontraron resultados", apellido_p: "", apellido_m: "", rut: "", ubicacion: "", maps: "" }]);
+                            }
+                        })
+                        .catch(error => {
+                            console.error("Error:", error);
+                        });
+                }
+
+                function mostrarPopup(resultados) {
+                    let contenido = "<h3>Resultados de la Búsqueda</h3><ul>";
+                    resultados.forEach(fallecido => {
+                        contenido += `<li><strong>RUT:</strong> ${fallecido.rut}</li>`;
+                        contenido += `<li><strong>Nombre Completo:</strong> ${fallecido.nombre} ${fallecido.apellido_p} ${fallecido.apellido_m}</li>`;
+                        contenido += `<li><strong>Fecha Fallecimiento:</strong> ${fallecido.fechafallecimiento} </li>`;
+                        contenido += `<li><strong>Ubicación:</strong> ${fallecido.ubicacion}</li>`;
+                        
+                        // Mostrar el campo maps como un enlace si tiene una URL
+                        if (fallecido.maps) {
+                            contenido += `<li><strong>Maps:</strong> <a href="${fallecido.maps}" target="_blank">Ver en Maps</a></li>`;
+                        } else {
+                            contenido += `<li><strong>Maps:</strong> No disponible</li>`;
+                        }
+                        
+                        contenido += "<hr>";
+                    });
+                    contenido += "</ul>";
+
+                    // Crear la superposición y el popup
+                    const overlay = document.createElement('div');
+                    overlay.classList.add('overlay');
+                    overlay.onclick = cerrarPopup; // Permitir cerrar al hacer clic fuera del popup
+
+                    const popup = document.createElement('div');
+                    popup.classList.add('popup');
+                    popup.innerHTML = contenido + '<button onclick="cerrarPopup()">Cerrar</button>';
+
+                    overlay.appendChild(popup);
+                    document.body.appendChild(overlay);
+                }
+
+                function cerrarPopup() {
+                    const overlay = document.querySelector('.overlay');
+                    if (overlay) {
+                        overlay.remove();
+                    }
+                }
+            </script>
+        </div>
+    </div>
+
+    <!-- Sección de información adicional -->
+    <div class="info-section">
+        <img src="{% static 'img/imagenabajo.webp' %}" alt="Imagen descriptiva" class="info-image">
+        <div class="info-text">
+            <h2>¿Cuál es el proceso para despedir a tu ser querido?</h2>
+            <p>Si deseas ayuda inmediata o necesitas activar alguno de tus productos, te ofrecemos nuestro acompañamiento integral en donde uno de nuestros asesores te guiarán en cada paso de este proceso.</p>
+            <ol>
+                <li>Obtener certificado médico de defunción.</li>
+                <li>Decidir lugar de velación y tipo de despedida.</li>
+                <li>Adquirir servicio funerario y cremación / sepultación.</li>
+                <li>Velación.</li>
+                <li>Ceremonia de sepultación o cremación.</li>
+            </ol>
+            <button onclick="window.open('https://web.whatsapp.com', '_blank');" class="contact-button">Quiero contactarme</button>
+        </div>
+    </div>
+
+    <!-- Incluir footer -->
+    {% include "includes/footer.html" %}
+
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
+</body>
+</html>

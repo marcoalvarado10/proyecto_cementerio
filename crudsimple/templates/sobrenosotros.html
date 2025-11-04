@@ -1,0 +1,57 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Nosotros</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+    <link rel="stylesheet" href="{% static 'css/styles.css' %}?v=1.0">
+
+    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.12.9/dist/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+</head>
+<body>
+
+    <!-- Incluir header -->
+    {% include "includes/header.html" %}
+
+
+
+    <!-- Sección de información adicional -->
+
+    <div class="info-section-banner">
+
+        <div class="cardnosotros mb-3">
+            <img class="card-img-top" src="https://upload.wikimedia.org/wikipedia/commons/thumb/c/c6/Panor%C3%A1mica_Cementerio_3.jpg/1920px-Panor%C3%A1mica_Cementerio_3.jpg" alt="Card image cap">
+            <div class="card-body">
+            <h5 class="card-title">Cementerio N° 3 de Valparaíso</h5>
+            <p class="card-text">El Cementerio N° 3 de Valparaíso, comúnmente llamado Cementerio de Playa Ancha es un cementerio ubicado en el cerro del mismo nombre, en la ciudad de Valparaíso, Chile. Fue fundado en 1892 y es actualmente el de mayor extensión de la Región de Valparaíso. Es administrado por la Dirección de Cementerios de la Ilustre Municipalidad de Valparaíso, que también tiene a cargo los cementerios N°1 y N°2.1​2​</p>
+            
+            <p class="card-text">Hasta 1825 la sepultación de los fallecidos en Valparaíso se realizaba indiscriminadamente en cualquier lugar de la parte alta de la ciudad. Ese año la municipalidad decidió reglamentar la situación, dada la aparición de plagas, como la peste bubónica, a raíz del grave problema de salud pública que ocasionaban los cadáveres en los faldeos de los cerros.
+
+                El primer reglamento de sepulturas de perpetuidad sirvió de base para los cementerios ya erigidos en la ciudad (N°1, N°2 y el de Disidentes). En agosto de 1887 se resolvería construir uno en la parte baja de Playa Ancha, principalmente por la necesidad de las familias más pobres, ya que los cementerios anteriormente nombrados estaban enfocados sólo para la clase alta porteña. El cementerio N°3 sería fundado en 1892, con Carlos Lorca como su primer administrador.
+                
+                Posee variados tipos de sepultura, desde nichos a mausoleos. Algunos albergan colonias de inmigrantes e instituciones, como el cuartel Alemán (que reúne a los primeros inmigrantes de la ciudad), el cuartel de la Armada de Chile o el de los integrantes del plantel campeón de Santiago Wanderers en 1968.3​ Una de las tumbas más visitadas es la de Emile Dubois, acusado de múltiples homicidios y fusilado en 1907, pues muchos porteños lo consideran un santo pagano.
+                
+                El terreno cuenta con 134.944 metros cuadrados de planicie y 29.190 metros cuadrados de áreas inclinadas, totalizando 164.134 metros cuadrados.</p>
+                <p class="card-text"><small class="text-muted">Chile,Valparaiso,Valparaiso</small></p>
+
+        </div>
+
+    </div >
+
+
+
+
+    <!-- Incluir footer -->
+
+    <!-- Bootstrap JS -->
+</body>
+<footer>    
+    {% include "includes/footer.html" %}
+</footer>
+
+</html>

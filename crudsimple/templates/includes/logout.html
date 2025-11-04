@@ -1,0 +1,17 @@
+{% load static %}
+
+<!-- Navbar -->
+<nav class="navbar">
+    <a href="{% url 'index' %}" class="logo">
+        <img src="{% static 'img/logo.png' %}" alt="Logo" class="logo-img">
+    </a>
+
+        <div class="menu">
+        <a href="{% url 'dashboard' %}">Dashboard</a>
+        <a href="{% url 'listadoFallecidos' %}">Lista Fallecidos</a>
+
+    </div>
+    <a href="{% url 'logout' %}" margin= "auto" class="login-button">Cerrar Sesión</a>
+
+</nav>
+

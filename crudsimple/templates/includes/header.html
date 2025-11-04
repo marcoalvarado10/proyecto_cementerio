@@ -1,0 +1,18 @@
+{% load static %}
+
+<!-- Navbar -->
+ 
+<nav class="navbar">
+    <a href="{% url 'index' %}" class="logo">
+        <img src="{% static 'img/logo.png' %}" alt="Logo" class="logo-img">
+    </a>
+    <div class="menu">
+        <a href="{% url 'historias' %}">Historias</a>
+        <a href="{% url 'sobrenosotros' %}">Sobre Nosotros</a>
+
+    </div>
+    
+    <a href="{% url 'login' %}" class="login-button">Iniciar Sesión</a>
+
+
+</nav>

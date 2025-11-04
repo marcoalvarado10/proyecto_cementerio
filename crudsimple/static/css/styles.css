@@ -1,0 +1,467 @@
+body {
+    margin: 0;
+    font-family: Arial, sans-serif;
+
+}
+
+
+
+
+.navbar {
+    display: flex;
+    align-items: center;
+    background-color: #104923;
+    flex-wrap: wrap;
+    padding-left: 30px;
+
+    padding-top: 0 !important;
+
+
+    
+}
+
+/* Estilos generales para el logo */
+.logo {
+    font-size: 24px;
+    text-decoration: none;
+    margin-right: 20px;
+    display: flex;
+    align-items: center;
+}
+
+/* Ajustes para pantallas pequeñas */
+@media (max-width: 768px) {
+    .navbar {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center; /* Centra el contenido en la barra de navegación */
+    }
+
+    .menu {
+        width: 100%; /* El menú ocupa todo el ancho */
+        text-align: center; /* Centra el texto del menú */
+    }
+
+    .menu-toggle {
+        position: absolute;
+        top: 10px;
+        right: 10px;
+    }
+
+    .logo {
+        margin: 0;
+        order: 1;
+        align-self: center; /* Asegura que el logo esté centrado */
+        margin-bottom: 10px; /* Espacio adicional debajo del logo */
+    }
+}
+
+
+.menu {
+    display: flex;
+    align-items: center;
+    flex-grow: 1;
+}
+
+.menu a {
+    color: white;
+    padding: 10px 15px;
+    text-decoration: none;
+}
+
+.menu a:hover {
+    background-color: #176933;
+}
+
+.login-button {
+    background-color: #4CAF50;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    margin-right: 20px;
+    cursor: pointer;
+    font-size: 16px;
+    border-radius: 25px;
+    text-decoration: none; /* Quita la línea debajo del enlace */
+
+}
+
+
+
+
+.login-button:hover {
+    background-color: #45a049;
+}
+
+/* Estilos para pantallas pequeñas */
+@media (max-width: 768px) {
+    .navbar {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    .menu {
+        width: 100%;
+        flex-direction: column;
+        margin-top: 10px;
+    }
+
+    .menu a {
+        padding: 10px;
+        
+        width: 100%;
+        text-align: center;
+    }
+
+    .login-button {
+        margin-top: 10px; /* Espacio adicional para centrar en responsive */
+        width: 80%;
+        margin-left: 45px; /* Espacio adicional para centrar en responsive */
+
+        text-align: center;
+    }
+
+
+    /* Ajusta el tamaño del texto del banner en pantallas pequeñas */
+    .static-banner h1 {
+        font-size: 2rem;
+    }
+
+
+
+
+    .input-group .form-control {
+        font-size: 1rem;
+    }
+}
+
+/* Banner estático */
+.static-banner {
+    position: relative;
+    text-align: center;
+    color: white;
+}
+
+.static-banner h1 {
+    position: absolute;
+    top: -150%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-size: 3rem;
+    font-weight: bold;
+    text-shadow: 2px 2px 5px rgba(0, 0, 0, 0.7);
+    z-index: 1;
+}
+
+.static-banner img {
+    width: 100%;
+    height: 600px;
+    object-fit: cover;
+}
+
+
+
+
+
+
+
+
+
+.footer {
+    background-color: #176933;
+    color: white;
+    text-align: center;
+    padding: 10px;
+    width: 100%;
+}
+
+
+
+
+
+.static-banner {
+    position: relative;
+}
+
+.banner-image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+
+
+
+
+.search-form {
+    display: flex;
+    justify-content: center;
+    gap: 5px;
+}
+
+.input-group {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    background-color: white;
+    border-radius: 8px;
+    padding: 5px;
+}
+
+.form-control {
+    border: none;
+    box-shadow: none;
+    padding: 10px;
+    font-size: 1rem;
+    min-width: 150px;
+}
+
+.input-group-text {
+    background: transparent;
+    border: none;
+    color: #333;
+    font-size: 1.2rem;
+}
+
+.btn-search {
+    background-color: #4CAF50;
+    color: white;
+    border: none;
+    padding: 10px 15px;
+    cursor: pointer;
+    font-size: 1rem;
+    border-radius: 8px;
+}
+
+
+
+
+
+.logo-img {
+    width: 60px; /* Ajusta el ancho según lo necesites */
+    height: auto; /* Mantiene la proporción */
+}
+
+
+
+
+.info-banner {
+    display: flex;
+    align-items: center;
+    gap: 20px; /* Espacio entre la imagen y el texto */
+    padding: 20px;
+    border: 1px solid #ddd; /* Opcional: Borde para delimitar el contenedor */
+    border-radius: 8px;
+    background-color: #f9f9f9; /* Color de fondo claro */
+    max-width: 800px; /* Ajusta el ancho máximo del contenedor */
+    margin: 20px auto; /* Centra el contenedor en la página */
+}
+
+
+.info-section {
+    display: flex;
+    align-items: center;
+    gap: 20px; /* Espacio entre la imagen y el texto */
+    padding: 20px;
+    border: 1px solid #ddd; /* Opcional: Borde para delimitar el contenedor */
+    border-radius: 8px;
+    background-color: #f9f9f9; /* Color de fondo claro */
+    max-width: 800px; /* Ajusta el ancho máximo del contenedor */
+    margin: 20px auto; /* Centra el contenedor en la página */
+}
+
+.info-image {
+    width: 200px; /* Ancho de la imagen */
+    height: auto;
+    border-radius: 8px; /* Bordes redondeados */
+}
+
+.info-text {
+    flex: 1;
+}
+
+.info-text h2 {
+    font-size: 1.5rem;
+    color: #333;
+    margin-bottom: 10px;
+}
+
+.info-text p {
+    margin-bottom: 10px;
+    color: #666;
+}
+
+.info-text ol {
+    padding-left: 20px;
+    color: #666;
+}
+
+.contact-button {
+    background-color: #4CAF50;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    cursor: pointer;
+    font-size: 1rem;
+    border-radius: 5px;
+    margin-top: 10px;
+}
+
+.contact-button:hover {
+    background-color: #45a049;
+}
+
+
+
+
+
+
+
+
+/* Superposición oscura que cubre toda la pantalla */
+.overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+}
+
+/* Estilos del popup */
+.popup {
+    background-color: white;
+    padding: 20px;
+    border-radius: 8px;
+    max-width: 500px;
+    width: 90%;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+    position: relative;
+    z-index: 1001;
+    text-align: center;
+}
+
+.popup button {
+    margin-top: 10px;
+    padding: 8px 16px;
+    background-color: #007bff;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+.popup button:hover {
+    background-color: #0056b3;
+}
+
+
+
+
+
+
+
+
+
+.popup ul {
+    list-style-type: none; /* Elimina los puntos */
+    padding-left: 0;       /* Elimina el espacio de margen izquierdo */
+}
+
+
+
+
+.campo-input {
+    border: 1px solid #ced4da;
+    border-radius: 4px;
+    padding: 10px;
+    box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.1);
+    background-color: #fff;
+    transition: box-shadow 0.3s, border-color 0.3s;
+}
+
+.campo-input:focus {
+    border-color: #80bdff;
+    outline: none;
+    box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.1), 0 0 5px rgba(128, 189, 255, 0.5);
+}
+
+
+
+
+
+.overlay-content {
+    position: absolute;
+    
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    text-align: center;
+    color: white;
+    width: 100%; /* Asegura que ocupe todo el ancho */
+    max-width: 1500px; /* Máximo ancho del contenido */
+    padding: 10px; /* Espaciado interno */
+}
+
+.overlay-content h1 {
+    font-size: 2rem; /* Tamaño para pantallas grandes */
+    line-height: 1.2; /* Ajusta la separación entre líneas */
+    white-space: normal; /* Permite saltos de línea */
+    text-shadow: 2px 2px 5px rgba(0, 0, 0, 0.7); /* Sombra para texto */
+    margin: 0; /* Elimina márgenes por defecto */
+}
+
+/* Ajustes para pantallas medianas */
+@media (max-width: 992px) {
+    .overlay-content h1 {
+        padding-top: 5%;
+
+        font-size: 2.5rem; /* Tamaño de texto reducido */
+    }
+}
+
+/* Ajustes para pantallas pequeñas */
+@media (max-width: 768px) {
+    .overlay-content h1 {
+        padding-top: 40%;
+
+        font-size: 2rem; /* Tamaño más pequeño */
+    }
+}
+
+/* Ajustes para pantallas muy pequeñas */
+@media (max-width: 576px) {
+    .overlay-content h1 {
+        padding-top: 40%;
+        font-size: 1.5rem;
+    }
+}
+
+
+
+.card {
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Sombra opcional para darle profundidad */
+    border-radius: 8px; /* Bordes redondeados */
+    overflow: hidden; /* Oculta cualquier desbordamiento en los bordes redondeados */
+}
+
+.card-body {
+    padding: 20px; /* Ajusta el espacio interno de la tarjeta */
+}
+
+.card-text {
+    margin-bottom: 15px; /* Espacio entre párrafos dentro de la tarjeta */
+}
+
+
+.cardnosotros {
+    margin: 100px; /* Espacio alrededor de la tarjeta */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Sombra opcional para darle profundidad */
+    border-radius: 8px; /* Bordes redondeados */
+    overflow: hidden; /* Oculta cualquier desbordamiento en los bordes redondeados */
+}

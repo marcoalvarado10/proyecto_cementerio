@@ -1,0 +1,90 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Historias</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+
+    <link rel="stylesheet" href="{% static 'css/styles.css' %}?v=1.0">
+
+
+</head>
+<body>
+
+    <!-- Incluir header -->
+    {% include "includes/header.html" %}
+
+
+
+    <!-- Sección de información adicional -->
+    <div class="info-section">
+        <img src="{% static 'img/martinbusca.png' %}" alt="Imagen descriptiva" class="info-image">
+        <div class="info-text">
+            <h2>Martín Busca</h2>
+
+                <li>En el caso de su tumba han encontrado a todo
+                    tipo de persona haciendo brujería e incluso, actos de
+                    sacrificio.El mito de este personaje
+                    cuenta que hizo un pacto con el
+                    diablo y se hizo millonario.
+                    cambio daba su alma una vez que
+                    su cuerpo tocara tierra, cosa
+                    que nunca sucedió ya que su
+                    ataúd se encuentra suspendido
+                    por cuatro patas de leones con
+                    seis dedos. Hecho por el cual se
+                    le conoce como el hombre que
+                    engañó al “cachuo”.</li>
+
+        </div>
+    </div>
+    <div class="info-section">
+        <img src="{% static 'img/valiuntinipisoni.png' %}" alt="Imagen descriptiva" class="info-image">
+        <div class="info-text">
+            <h2>Valentini Pisoni</h2>
+            <li>
+                El mito cuenta que por las noches el ataúd
+                    del niño se salía de su mausoleo y sus restos se repartían por
+                    el cementerio, por lo cual los guardias aburridos de tener
+                    que transportar
+                    continuamente a Pisoni,
+                    decidieron encadenarlo,
+                    dejarlo levantado en vez de
+                    estar recostado y cerrar con
+                    un muro de cemento.</li>
+        </div>
+    </div>
+    <div class="info-section">
+        <img src="{% static 'img/emiledubois.png' %}" alt="Imagen descriptiva" class="info-image">
+        <div class="info-text">
+            <h2>Emile Dubois</h2>
+
+            <li>El Robin Hood chileno, ya que sus víctimas fueron
+                usureros de la alta sociedad y sus asesinatos son
+                considerados un acto de
+                justicia de la clase
+                obrera en contra de la
+                burguesía. Desde
+                entonces se convirtió en
+                una especie de santo por
+                los porteños, quienes en
+                una animita ubicada en
+                lo más profundo del cementerio,
+                van a rezar y a pedir favores, los
+                cuales son respondidos de manera
+                que todo el sector está repleto de
+                placas en agradecimiento a sus milagros.</li>
+        </div>
+    </div>
+
+    <!-- Incluir footer -->
+    {% include "includes/footer.html" %}
+
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
+</body>
+</html>
