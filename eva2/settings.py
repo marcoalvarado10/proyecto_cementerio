@@ -1,8 +1,7 @@
-
 from pathlib import Path
 import os
-import pymysql
-pymysql.install_as_MySQLdb()
+# import pymysql
+# pymysql.install_as_MySQLdb()
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -67,18 +66,12 @@ WSGI_APPLICATION = 'eva2.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/5.0/ref/settings/#databases
 
-
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'eva2',
-        'USER': 'root',
-        'PASSWORD': '123456789',
-        'HOST': 'localhost',
-        'PORT': '3306',
+        'ENGINE': 'django.db.backends.sqlite3',
+        'NAME': BASE_DIR / 'db.sqlite3',
     }
 }
-
 
 
 AUTH_PASSWORD_VALIDATORS = [
@@ -124,3 +117,12 @@ LOGIN_URL = '/login/'
 
 LOGIN_REDIRECT_URL = '/fallecidos/'
 LOGOUT_REDIRECT_URL = '/'
+
+# Configuración de Email
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_PORT = 587
+EMAIL_USE_TLS = True
+EMAIL_HOST_USER = 'tu_correo@gmail.com'  # Cambia esto
+EMAIL_HOST_PASSWORD = 'tu_contraseña_app'  # Contraseña de aplicación de Gmail
+DEFAULT_FROM_EMAIL = 'tu_correo@gmail.com'

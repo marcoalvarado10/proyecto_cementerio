@@ -16,10 +16,9 @@ def index(request):
 
 @login_required
 def listadoFallecidos(request):
-    fallecidos = Fallecido.objects.all()  # Consulta base
-    filter_form = FallecidoFilterForm(request.GET)  # Formulario para filtros
+    fallecidos = Fallecido.objects.all()
+    filter_form = FallecidoFilterForm(request.GET)
 
-    # Aplicar filtros si el formulario es válido
     if filter_form.is_valid():
         rut = filter_form.cleaned_data.get('rut')
         nombre = filter_form.cleaned_data.get('nombre')
@@ -29,7 +28,6 @@ def listadoFallecidos(request):
         fecha_fin = filter_form.cleaned_data.get('fecha_fin')
         ubicacion = filter_form.cleaned_data.get('ubicacion')
 
-        # Filtros condicionales
         if rut:
             fallecidos = fallecidos.filter(rut__icontains=rut)
         if nombre:
@@ -59,14 +57,18 @@ def agregarFallecido(request):
         form = FormFallecido(request.POST)
         rut = request.POST.get('rut')
 
-        # Verificar si el RUT ya existe
         if Fallecido.objects.filter(rut=rut).exists():
             messages.error(request, "Este RUT ya está registrado.")
             return redirect('listadoFallecidos')
 
         if form.is_valid():
-            form.save()
-            messages.success(request, "Fallecido agregado exitosamente.")
+            fallecido = form.save()
+            
+            from crudsimple.whatsapp_utils import generar_link_whatsapp
+            whatsapp_link = generar_link_whatsapp(fallecido)
+            
+            messages.success(request, f"✅ Fallecido agregado exitosamente. <a href='{whatsapp_link}' target='_blank' class='btn btn-success btn-sm ms-2'><i class='fab fa-whatsapp'></i> Enviar WhatsApp</a>", extra_tags='safe')
+            
             return redirect('listadoFallecidos')
 
     return redirect('listadoFallecidos')
@@ -84,7 +86,6 @@ def actualizarFallecido(request, id):
     else:
         form = FormFallecido(instance=fallecido)
 
-    # Devuelve el formulario y la lista de fallecidos en caso de error
     fallecidos = Fallecido.objects.all()
     context = {'fallecidos': fallecidos, 'form': form, 'fallecido': fallecido}
     return render(request, 'fallecidos.html', context)
@@ -102,15 +103,22 @@ def buscar_fallecido(request):
     apellido_m = request.GET.get('apellido_m', '').strip()
     rut = request.GET.get('rut', '').strip()
 
-    if nombre and apellido_p and apellido_m:
-        fallecidos = Fallecido.objects.filter(
-            nombre=nombre,
-            apellido_p=apellido_p,
-            apellido_m=apellido_m
-        )
-    elif rut:
-        fallecidos = Fallecido.objects.filter(rut=rut)
-    else:
+    fallecidos = Fallecido.objects.all()
+
+    if nombre:
+        fallecidos = fallecidos.filter(nombre__icontains=nombre)
+    
+    if apellido_p:
+        fallecidos = fallecidos.filter(apellido_p__icontains=apellido_p)
+    
+    if apellido_m:
+        fallecidos = fallecidos.filter(apellido_m__icontains=apellido_m)
+    
+    if rut:
+        rut_limpio = rut.replace('.', '').replace('-', '')
+        fallecidos = fallecidos.filter(rut__icontains=rut_limpio)
+
+    if not (nombre or apellido_p or apellido_m or rut):
         fallecidos = Fallecido.objects.none()
 
     resultados = list(fallecidos.values())
@@ -118,8 +126,13 @@ def buscar_fallecido(request):
 
 @login_required
 def dashboard(request):
+    from datetime import datetime
+    
     total_fallecidos = Fallecido.objects.count()
-    fallecidos_hoy = Fallecido.objects.filter(fechafallecimiento=timezone.now().date()).count()
+    
+    # Fallecidos REGISTRADOS hoy (usando __date ignora la zona horaria)
+    hoy = datetime.now().date()
+    fallecidos_hoy = Fallecido.objects.filter(fecha_registro__date=hoy).count()
     
     # Consulta para obtener la ubicación con más fallecidos
     ubicacion_mas_fallecidos = (
@@ -129,9 +142,9 @@ def dashboard(request):
         .first()
     )
     
-    # Consulta para obtener el número de fallecidos en la última semana
-    una_semana_atras = timezone.now().date() - timedelta(days=7)
-    fallecidos_ultima_semana = Fallecido.objects.filter(fechafallecimiento__gte=una_semana_atras).count()
+    # Consulta para obtener el número de fallecidos registrados en la última semana
+    una_semana_atras = timezone.now() - timedelta(days=7)
+    fallecidos_ultima_semana = Fallecido.objects.filter(fecha_registro__gte=una_semana_atras).count()
 
     context = {
         'total_fallecidos': total_fallecidos,
@@ -142,21 +155,16 @@ def dashboard(request):
     return render(request, 'dashboard.html', context)
 
 
-
-
-
-
 def export_total_fallecidos(request):
     fallecidos = Fallecido.objects.all()
     return export_to_excel(fallecidos, 'Total Fallecidos')
 
 def export_fallecidos_hoy(request):
     hoy = timezone.now().date()
-    fallecidos = Fallecido.objects.filter(fechafallecimiento=hoy)
-    return export_to_excel(fallecidos, 'Fallecidos Hoy')
+    fallecidos = Fallecido.objects.filter(fecha_registro__date=hoy)
+    return export_to_excel(fallecidos, 'Fallecidos Registrados Hoy')
 
 def export_ubicacion_mas_fallecidos(request):
-    # Ubicación con más fallecidos
     ubicacion_mas_fallecidos = (
         Fallecido.objects.values('ubicacion')
         .annotate(total=Count('id'))
@@ -167,9 +175,9 @@ def export_ubicacion_mas_fallecidos(request):
     return export_to_excel(fallecidos, 'Ubicación con Más Fallecidos')
 
 def export_fallecidos_ultima_semana(request):
-    una_semana_atras = timezone.now().date() - timedelta(days=7)
-    fallecidos = Fallecido.objects.filter(fechafallecimiento__gte=una_semana_atras)
-    return export_to_excel(fallecidos, 'Fallecidos Última Semana')
+    una_semana_atras = timezone.now() - timedelta(days=7)
+    fallecidos = Fallecido.objects.filter(fecha_registro__gte=una_semana_atras)
+    return export_to_excel(fallecidos, 'Fallecidos Registrados Última Semana')
 
 def export_to_excel(fallecidos, title):
     response = HttpResponse(content_type='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')
@@ -179,11 +187,9 @@ def export_to_excel(fallecidos, title):
     worksheet = workbook.active
     worksheet.title = title
 
-    # Header
     headers = ['RUT', 'Nombre', 'Apellido P', 'Apellido M', 'Fecha Fallecimiento', 'Ubicación', 'Maps']
     worksheet.append(headers)
 
-    # Data rows
     for fallecido in fallecidos:
         row = [
             fallecido.rut,
@@ -198,7 +204,6 @@ def export_to_excel(fallecidos, title):
 
     workbook.save(response)
     return response
-
 
 
 def historias(request):

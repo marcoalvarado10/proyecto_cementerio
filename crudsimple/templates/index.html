@@ -119,7 +119,9 @@
                 <li>Velación.</li>
                 <li>Ceremonia de sepultación o cremación.</li>
             </ol>
-            <button onclick="window.open('https://web.whatsapp.com', '_blank');" class="contact-button">Quiero contactarme</button>
+            <button onclick="window.open('https://wa.me/56978202721?text=Hola,%20necesito%20información%20sobre%20sus%20servicios', '_blank');" class="contact-button">
+    <i class="fab fa-whatsapp"></i> Quiero contactarme
+</button>
         </div>
     </div>
 
@@ -128,5 +130,94 @@
 
     <!-- Bootstrap JS -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
+
+<!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
+
+    <!-- Script para formatear y validar RUT chileno -->
+    <script>
+        // Función para formatear RUT automáticamente
+        function formatearRUT(rut) {
+            // Eliminar puntos, guiones y espacios
+            rut = rut.replace(/[^\dkK]/g, '');
+            
+            // Si está vacío, retornar
+            if (rut.length === 0) return '';
+            
+            // Separar el dígito verificador
+            let cuerpo = rut.slice(0, -1);
+            let dv = rut.slice(-1).toUpperCase();
+            
+            // Formatear el cuerpo con puntos
+            cuerpo = cuerpo.replace(/\B(?=(\d{3})+(?!\d))/g, '.');
+            
+            // Si hay al menos un dígito, agregar el guión
+            if (cuerpo.length > 0) {
+                return cuerpo + '-' + dv;
+            }
+            
+            return dv;
+        }
+
+        // Función para validar RUT chileno
+        function validarRUT(rut) {
+            // Limpiar formato
+            rut = rut.replace(/[^\dkK]/g, '');
+            
+            if (rut.length < 2) return false;
+            
+            let cuerpo = rut.slice(0, -1);
+            let dv = rut.slice(-1).toUpperCase();
+            
+            // Calcular dígito verificador
+            let suma = 0;
+            let multiplo = 2;
+            
+            for (let i = cuerpo.length - 1; i >= 0; i--) {
+                suma += multiplo * parseInt(cuerpo.charAt(i));
+                multiplo = multiplo < 7 ? multiplo + 1 : 2;
+            }
+            
+            let dvEsperado = 11 - (suma % 11);
+            dvEsperado = dvEsperado === 11 ? '0' : dvEsperado === 10 ? 'K' : dvEsperado.toString();
+            
+            return dv === dvEsperado;
+        }
+
+        // Aplicar formato al campo de RUT del formulario de búsqueda
+        document.addEventListener('DOMContentLoaded', function() {
+            const rutInput = document.querySelector('input[name="rut"]');
+            
+            if (rutInput) {
+                rutInput.addEventListener('input', function(e) {
+                    let cursorPos = this.selectionStart;
+                    let valorAnterior = this.value;
+                    
+                    this.value = formatearRUT(this.value);
+                    
+                    // Ajustar posición del cursor
+                    if (this.value.length > valorAnterior.length) {
+                        cursorPos++;
+                    }
+                    this.setSelectionRange(cursorPos, cursorPos);
+                });
+
+                rutInput.addEventListener('blur', function() {
+                    if (this.value && !validarRUT(this.value)) {
+                        this.style.borderColor = 'red';
+                    } else {
+                        this.style.borderColor = '';
+                    }
+                });
+
+                rutInput.addEventListener('focus', function() {
+                    this.style.borderColor = '';
+                });
+            }
+        });
+    </script>
+</body>
+</html>
+
 </body>
 </html>
