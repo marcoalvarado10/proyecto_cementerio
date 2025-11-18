@@ -126,3 +126,9 @@ EMAIL_USE_TLS = True
 EMAIL_HOST_USER = 'tu_correo@gmail.com'  # Cambia esto
 EMAIL_HOST_PASSWORD = 'tu_contraseña_app'  # Contraseña de aplicación de Gmail
 DEFAULT_FROM_EMAIL = 'tu_correo@gmail.com'
+
+
+# ============================================
+# GOOGLE MAPS CONFIGURATION
+# ============================================
+GOOGLE_MAPS_API_KEY = 'AIzaSyCvH1KUqAJ1Jp7QesGPRRKjH9EeBXXXra0'

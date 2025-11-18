@@ -1,13 +1,15 @@
 {% load static %}
 <!DOCTYPE html>
 <html lang="es">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Administración</title>
 
     <!-- Bootstrap CSS -->
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
 
     <!-- Font Awesome para los íconos -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
@@ -24,45 +26,72 @@
         <br>
         <h1 class="text-center mb-4" style="padding-left: 30%;">𝓛𝓲𝓼𝓽𝓪 𝓕𝓪𝓵𝓵𝓮𝓬𝓲𝓭𝓸𝓼</h1>
 
-        
+
         <form method="get" action="{% url 'listadoFallecidos' %}" class="mb-4">
             <div class="row g-3">
                 <!-- Filtros de texto -->
                 <div class="col-md-3">
-                    <input type="text" name="rut" class="form-control campo-input" placeholder="Rut" value="{{ request.GET.rut|default_if_none:'' }}">
+                    <input type="text" name="rut" class="form-control campo-input" placeholder="Rut"
+                        value="{{ request.GET.rut|default_if_none:'' }}">
                 </div>
                 <div class="col-md-3">
-                    <input type="text" name="nombre" class="form-control campo-input" placeholder="Nombre" value="{{ request.GET.nombre|default_if_none:'' }}">
+                    <input type="text" name="nombre" class="form-control campo-input" placeholder="Nombre"
+                        value="{{ request.GET.nombre|default_if_none:'' }}">
                 </div>
                 <div class="col-md-3">
-                    <input type="text" name="apellido_p" class="form-control campo-input" value="{{ request.GET.apellido_p|default_if_none:'' }}" placeholder="Apellido Paterno">
+                    <input type="text" name="apellido_p" class="form-control campo-input"
+                        value="{{ request.GET.apellido_p|default_if_none:'' }}" placeholder="Apellido Paterno">
                 </div>
                 <div class="col-md-3">
-                    <input type="text" name="apellido_m" class="form-control campo-input" value="{{ request.GET.apellido_m|default_if_none:'' }}" placeholder="Apellido Materno">
+                    <input type="text" name="apellido_m" class="form-control campo-input"
+                        value="{{ request.GET.apellido_m|default_if_none:'' }}" placeholder="Apellido Materno">
                 </div>
-        
+
                 <!-- Filtros de fecha -->
                 <div class="col-md-3">
-                    <input type="date" name="fecha_inicio" class="form-control campo-input" value="{{ request.GET.fecha_inicio|default_if_none:'' }}">
+                    <input type="date" name="fecha_inicio" class="form-control campo-input"
+                        value="{{ request.GET.fecha_inicio|default_if_none:'' }}">
                 </div>
                 <div class="col-md-3">
-                    <input type="date" name="fecha_fin" class="form-control campo-input" value="{{ request.GET.fecha_fin|default_if_none:'' }}">
+                    <input type="date" name="fecha_fin" class="form-control campo-input"
+                        value="{{ request.GET.fecha_fin|default_if_none:'' }}">
                 </div>
-        
+
                 <!-- Filtro de Ubicación -->
                 <div class="col-md-3">
                     <select name="ubicacion" class="form-control campo-input">
-                        {% for choice, label in filter_form.ubicacion.field.choices %}
-                            <option value="{{ choice }}" {% if filter_form.ubicacion.value == choice %}selected{% endif %}>{{ label }}</option>
-                        {% endfor %}
+                        <option value="">Seleccione una ubicación</option>
+                        {% if request.GET.ubicacion == "sotano" %}
+                        <option value="sotano" selected>Sótano</option>
+                        {% else %}
+                        <option value="sotano">Sótano</option>
+                        {% endif %}
+
+                        {% if request.GET.ubicacion == "bloque_1" %}
+                        <option value="bloque_1" selected>Bloque 1</option>
+                        {% else %}
+                        <option value="bloque_1">Bloque 1</option>
+                        {% endif %}
+
+                        {% if request.GET.ubicacion == "bloque_2" %}
+                        <option value="bloque_2" selected>Bloque 2</option>
+                        {% else %}
+                        <option value="bloque_2">Bloque 2</option>
+                        {% endif %}
+
+                        {% if request.GET.ubicacion == "miramar" %}
+                        <option value="miramar" selected>Miramar</option>
+                        {% else %}
+                        <option value="miramar">Miramar</option>
+                        {% endif %}
                     </select>
                 </div>
-        
                 <!-- Botón de filtro -->
                 <div class="col-md-3 d-grid">
                     <div class="btn-group" role="group" style="width: 100%;">
                         <button type="submit" class="btn btn-primary"><i class="fas fa-search"></i> Filtrar</button>
-                        <a href="{% url 'listadoFallecidos' %}" class="btn btn-secondary"><i class="fas fa-times"></i> Limpiar</a>
+                        <a href="{% url 'listadoFallecidos' %}" class="btn btn-secondary"><i class="fas fa-times"></i>
+                            Limpiar</a>
                     </div>
                 </div>
             </div>
@@ -72,14 +101,15 @@
         {% if messages %}
         <div id="message-container">
             {% for message in messages %}
-                <div class="alert {% if message.tags %}alert-{{ message.tags|cut:'safe' }}{% else %}alert-info{% endif %} alert-dismissible fade show" role="alert">
-                    {% if 'safe' in message.tags %}
-                        {{ message|safe }}
-                    {% else %}
-                        {{ message }}
-                    {% endif %}
-                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-                </div>
+            <div class="alert {% if message.tags %}alert-{{ message.tags|cut:'safe' }}{% else %}alert-info{% endif %} alert-dismissible fade show"
+                role="alert">
+                {% if 'safe' in message.tags %}
+                {{ message|safe }}
+                {% else %}
+                {{ message }}
+                {% endif %}
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
             {% endfor %}
         </div>
         {% endif %}
@@ -92,49 +122,34 @@
             <div class="card-body">
                 <form method="post" action="{% url 'agregarFallecido' %}">
                     {% csrf_token %}
-                    
+
                     <h5 class="text-primary mb-3"><i class="fas fa-user"></i> Datos del Fallecido</h5>
-                    
+
                     <!-- Fila 1: RUT, Primer Nombre, Segundo Nombre, Apellido Paterno -->
                     <div class="row g-3 mb-3">
                         <div class="col-md-3">
                             <label for="rut" class="form-label">RUT *</label>
-                            <input type="text" class="form-control campo-input" id="rut" name="rut" placeholder="12.345.678-9" required>
+                            <input type="text" class="form-control campo-input" id="rut" name="rut"
+                                placeholder="12.345.678-9" required>
                         </div>
                         <div class="col-md-3">
                             <label for="nombre" class="form-label">Primer Nombre *</label>
-                            <input type="text" 
-                                   class="form-control campo-input" 
-                                   id="nombre" 
-                                   name="nombre" 
-                                   placeholder="Primer Nombre" 
-                                   pattern="[A-Za-zÁÉÍÓÚáéíóúÑñ\s]+" 
-                                   title="Solo letras y espacios" 
-                                   oninput="this.value = this.value.toUpperCase()"
-                                   required>
+                            <input type="text" class="form-control campo-input" id="nombre" name="nombre"
+                                placeholder="Primer Nombre" pattern="[A-Za-zÁÉÍÓÚáéíóúÑñ\s]+"
+                                title="Solo letras y espacios" oninput="this.value = this.value.toUpperCase()" required>
                         </div>
                         <div class="col-md-3">
                             <label for="segundo_nombre" class="form-label">Segundo Nombre</label>
-                            <input type="text" 
-                                   class="form-control campo-input" 
-                                   id="segundo_nombre" 
-                                   name="segundo_nombre" 
-                                   placeholder="Segundo Nombre (opcional)" 
-                                   pattern="[A-Za-zÁÉÍÓÚáéíóúÑñ\s]+" 
-                                   title="Solo letras y espacios" 
-                                   oninput="this.value = this.value.toUpperCase()">
+                            <input type="text" class="form-control campo-input" id="segundo_nombre"
+                                name="segundo_nombre" placeholder="Segundo Nombre (opcional)"
+                                pattern="[A-Za-zÁÉÍÓÚáéíóúÑñ\s]+" title="Solo letras y espacios"
+                                oninput="this.value = this.value.toUpperCase()">
                         </div>
                         <div class="col-md-3">
                             <label for="apellido_p" class="form-label">Apellido Paterno *</label>
-                            <input type="text" 
-                                   class="form-control campo-input" 
-                                   id="apellido_p" 
-                                   name="apellido_p" 
-                                   placeholder="Apellido Paterno" 
-                                   pattern="[A-Za-zÁÉÍÓÚáéíóúÑñ\s]+" 
-                                   title="Solo letras y espacios" 
-                                   oninput="this.value = this.value.toUpperCase()"
-                                   required>
+                            <input type="text" class="form-control campo-input" id="apellido_p" name="apellido_p"
+                                placeholder="Apellido Paterno" pattern="[A-Za-zÁÉÍÓÚáéíóúÑñ\s]+"
+                                title="Solo letras y espacios" oninput="this.value = this.value.toUpperCase()" required>
                         </div>
                     </div>
 
@@ -142,19 +157,14 @@
                     <div class="row g-3 mb-4">
                         <div class="col-md-3">
                             <label for="apellido_m" class="form-label">Apellido Materno *</label>
-                            <input type="text" 
-                                   class="form-control campo-input" 
-                                   id="apellido_m" 
-                                   name="apellido_m" 
-                                   placeholder="Apellido Materno" 
-                                   pattern="[A-Za-zÁÉÍÓÚáéíóúÑñ\s]+" 
-                                   title="Solo letras y espacios" 
-                                   oninput="this.value = this.value.toUpperCase()"
-                                   required>
+                            <input type="text" class="form-control campo-input" id="apellido_m" name="apellido_m"
+                                placeholder="Apellido Materno" pattern="[A-Za-zÁÉÍÓÚáéíóúÑñ\s]+"
+                                title="Solo letras y espacios" oninput="this.value = this.value.toUpperCase()" required>
                         </div>
                         <div class="col-md-3">
                             <label for="fechafallecimiento" class="form-label">Fecha Fallecimiento *</label>
-                            <input type="date" class="form-control campo-input" id="fechafallecimiento" name="fechafallecimiento" required>
+                            <input type="date" class="form-control campo-input" id="fechafallecimiento"
+                                name="fechafallecimiento" required>
                         </div>
                         <div class="col-md-3">
                             <label for="ubicacion" class="form-label">Ubicación *</label>
@@ -168,7 +178,8 @@
                         </div>
                         <div class="col-md-3">
                             <label for="maps" class="form-label">Google Maps</label>
-                            <input type="url" class="form-control campo-input" id="maps" name="maps" placeholder="https://maps.google.com/...">
+                            <input type="url" class="form-control campo-input" id="maps" name="maps"
+                                placeholder="https://maps.google.com/...">
                         </div>
                     </div>
 
@@ -179,15 +190,18 @@
                     <div class="row g-3 mb-3">
                         <div class="col-md-4">
                             <label for="nombre_familiar" class="form-label">Nombre Completo *</label>
-                            <input type="text" class="form-control campo-input" id="nombre_familiar" name="nombre_familiar" placeholder="Nombre del familiar" required>
+                            <input type="text" class="form-control campo-input" id="nombre_familiar"
+                                name="nombre_familiar" placeholder="Nombre del familiar" required>
                         </div>
                         <div class="col-md-3">
                             <label for="email_familiar" class="form-label">Email</label>
-                            <input type="email" class="form-control campo-input" id="email_familiar" name="email_familiar" placeholder="correo@ejemplo.com">
+                            <input type="email" class="form-control campo-input" id="email_familiar"
+                                name="email_familiar" placeholder="correo@ejemplo.com">
                         </div>
                         <div class="col-md-3">
                             <label for="telefono_familiar" class="form-label">Teléfono *</label>
-                            <input type="tel" class="form-control campo-input" id="telefono_familiar" name="telefono_familiar" placeholder="+56 9 1234 5678" required>
+                            <input type="tel" class="form-control campo-input" id="telefono_familiar"
+                                name="telefono_familiar" placeholder="+56 9 1234 5678" required>
                         </div>
                         <div class="col-md-2">
                             <label for="parentesco" class="form-label">Parentesco *</label>
@@ -206,8 +220,10 @@
                     <!-- Botones -->
                     <div class="row">
                         <div class="col-md-12 d-flex justify-content-end gap-2">
-                            <button type="reset" class="btn btn-outline-secondary"><i class="fas fa-eraser"></i> Limpiar</button>
-                            <button type="submit" class="btn btn-success"><i class="fas fa-save"></i> Guardar Fallecido</button>
+                            <button type="reset" class="btn btn-outline-secondary"><i class="fas fa-eraser"></i>
+                                Limpiar</button>
+                            <button type="submit" class="btn btn-success"><i class="fas fa-save"></i> Guardar
+                                Fallecido</button>
                         </div>
                     </div>
                 </form>
@@ -216,66 +232,74 @@
 
         <!-- Tabla de fallecidos -->
         {% if fallecidos %}
-            <div class="table-responsive">
-                <table class="table table-striped table-hover">
-                    <thead class="table-dark">
-                        <tr>
-                            <th>RUT</th>
-                            <th>Nombre</th>
-                            <th>Apellido P</th>
-                            <th>Apellido M</th>
-                            <th>Fecha Fallecimiento</th>
-                            <th>Ubicación</th>
-                            <th>Maps</th>
-                            <th>Acciones</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {% for fallecido in fallecidos %}
-                            <tr>
-                                <td>{{ fallecido.rut }}</td>
-                                <td>{% if fallecido.segundo_nombre %}{{ fallecido.nombre }} {{ fallecido.segundo_nombre }}{% else %}{{ fallecido.nombre }}{% endif %}</td>
-                                <td>{{ fallecido.apellido_p }}</td>
-                                <td>{{ fallecido.apellido_m }}</td>
-                                <td>{{ fallecido.fechafallecimiento|date:"d-m-Y" }}</td>
-                                <td>{{ fallecido.ubicacion }}</td>
-                                <td>
-                                    {% if fallecido.maps %}
-                                        <a href="{{ fallecido.maps }}" target="_blank" class="btn btn-sm btn-info"><i class="fas fa-map-marker-alt"></i></a>
-                                    {% else %}
-                                        <span class="text-muted">N/A</span>
-                                    {% endif %}
-                                </td>
-                                <td>
-                                    <button class="btn btn-warning btn-sm" data-bs-toggle="modal" data-bs-target="#editModal"
-                                        data-id="{{ fallecido.id }}" 
-                                        data-rut="{{ fallecido.rut }}" 
-                                        data-nombre="{{ fallecido.nombre }}"
-                                        data-segundo_nombre="{{ fallecido.segundo_nombre }}"
-                                        data-apellido_p="{{ fallecido.apellido_p }}" 
-                                        data-apellido_m="{{ fallecido.apellido_m }}" 
-                                        data-fechafallecimiento="{{ fallecido.fechafallecimiento|date:'Y-m-d' }}"
-                                        data-ubicacion="{{ fallecido.ubicacion }}" 
-                                        data-maps="{{ fallecido.maps }}"
-                                        data-nombre_familiar="{{ fallecido.nombre_familiar }}"
-                                        data-email_familiar="{{ fallecido.email_familiar }}"
-                                        data-telefono_familiar="{{ fallecido.telefono_familiar }}"
-                                        data-parentesco="{{ fallecido.parentesco }}">
-                                        <i class="fas fa-edit"></i>
-                                    </button>
-                                    <a href="{% url 'eliminarFallecido' fallecido.id %}" class="btn btn-danger btn-sm" onclick="return confirm('¿Está seguro de eliminar este registro?')">
-                                        <i class="fas fa-trash"></i>
-                                    </a>
-                                </td>
-                            </tr>
-                        {% endfor %}
-                    </tbody>
-                </table>
-            </div>
+        <div class="table-responsive">
+            <table class="table table-striped table-hover">
+                <thead class="table-dark">
+                    <tr>
+                        <th>RUT</th>
+                        <th>Nombre</th>
+                        <th>Apellido P</th>
+                        <th>Apellido M</th>
+                        <th>Fecha Fallecimiento</th>
+                        <th>Ubicación</th>
+                        <th>Maps</th>
+                        <th>Acciones</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for fallecido in fallecidos %}
+                    <tr>
+                        <td>{{ fallecido.rut }}</td>
+                        <td>{% if fallecido.segundo_nombre %}{{ fallecido.nombre }} {{ fallecido.segundo_nombre }}{%
+                            else %}{{ fallecido.nombre }}{% endif %}</td>
+                        <td>{{ fallecido.apellido_p }}</td>
+                        <td>{{ fallecido.apellido_m }}</td>
+                        <td>{{ fallecido.fechafallecimiento|date:"d-m-Y" }}</td>
+                        <td>{{ fallecido.ubicacion }}</td>
+                        <td>
+                            {% if fallecido.latitud and fallecido.longitud %}
+                            <a href="{% url 'mapa_tumba' fallecido.id %}" class="btn btn-sm btn-info" title="Ver Mapa">
+                                <i class="fas fa-map-marked-alt"></i>
+                            </a>
+                            {% elif fallecido.maps %}
+                            <a href="{{ fallecido.maps }}" target="_blank" class="btn btn-sm btn-info"
+                                title="Google Maps">
+                                <i class="fas fa-map-marker-alt"></i>
+                            </a>
+                            {% else %}
+                            <span class="text-muted">N/A</span>
+                            {% endif %}
+                        </td>
+                        <td>
+                            <button class="btn btn-warning btn-sm" data-bs-toggle="modal" data-bs-target="#editModal"
+                                data-id="{{ fallecido.id }}" data-rut="{{ fallecido.rut }}"
+                                data-nombre="{{ fallecido.nombre }}"
+                                data-segundo_nombre="{{ fallecido.segundo_nombre }}"
+                                data-apellido_p="{{ fallecido.apellido_p }}"
+                                data-apellido_m="{{ fallecido.apellido_m }}"
+                                data-fechafallecimiento="{{ fallecido.fechafallecimiento|date:'Y-m-d' }}"
+                                data-ubicacion="{{ fallecido.ubicacion }}" data-maps="{{ fallecido.maps }}"
+                                data-latitud="{{ fallecido.latitud }}" data-longitud="{{ fallecido.longitud }}"
+                                data-nombre_familiar="{{ fallecido.nombre_familiar }}"
+                                data-email_familiar="{{ fallecido.email_familiar }}"
+                                data-telefono_familiar="{{ fallecido.telefono_familiar }}"
+                                data-parentesco="{{ fallecido.parentesco }}">
+                                <i class="fas fa-edit"></i>
+                            </button>
+                            <a href="{% url 'eliminarFallecido' fallecido.id %}" class="btn btn-danger btn-sm"
+                                onclick="return confirm('¿Está seguro de eliminar este registro?')">
+                                <i class="fas fa-trash"></i>
+                            </a>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
         {% else %}
-            <div class="alert alert-info text-center" role="alert">
-                <i class="fas fa-info-circle"></i> <strong>No se encontraron resultados en el sistema</strong>
-            </div>
+        <div class="alert alert-info text-center" role="alert">
+            <i class="fas fa-info-circle"></i> <strong>No se encontraron resultados en el sistema</strong>
+        </div>
         {% endif %}
     </div>
 
@@ -304,7 +328,7 @@
                     <input type="hidden" name="id" id="edit-id">
                     <div class="modal-body">
                         <h6 class="text-primary mb-3"><i class="fas fa-user"></i> Datos del Fallecido</h6>
-                        
+
                         <div class="row g-3 mb-3">
                             <div class="col-md-6">
                                 <label for="edit-rut" class="form-label">RUT</label>
@@ -312,32 +336,37 @@
                             </div>
                             <div class="col-md-6">
                                 <label for="edit-nombre" class="form-label">Primer Nombre</label>
-                                <input type="text" class="form-control campo-input" id="edit-nombre" name="nombre" required>
+                                <input type="text" class="form-control campo-input" id="edit-nombre" name="nombre"
+                                    required>
                             </div>
                         </div>
-                        
+
                         <div class="row g-3 mb-3">
                             <div class="col-md-6">
                                 <label for="edit-segundo_nombre" class="form-label">Segundo Nombre</label>
-                                <input type="text" class="form-control campo-input" id="edit-segundo_nombre" name="segundo_nombre">
+                                <input type="text" class="form-control campo-input" id="edit-segundo_nombre"
+                                    name="segundo_nombre">
                             </div>
                             <div class="col-md-6">
                                 <label for="edit-apellido_p" class="form-label">Apellido Paterno</label>
-                                <input type="text" class="form-control campo-input" id="edit-apellido_p" name="apellido_p" required>
+                                <input type="text" class="form-control campo-input" id="edit-apellido_p"
+                                    name="apellido_p" required>
                             </div>
                         </div>
-                        
+
                         <div class="row g-3 mb-3">
                             <div class="col-md-6">
                                 <label for="edit-apellido_m" class="form-label">Apellido Materno</label>
-                                <input type="text" class="form-control campo-input" id="edit-apellido_m" name="apellido_m" required>
+                                <input type="text" class="form-control campo-input" id="edit-apellido_m"
+                                    name="apellido_m" required>
                             </div>
                             <div class="col-md-6">
                                 <label for="edit-fechafallecimiento" class="form-label">Fecha Fallecimiento</label>
-                                <input type="date" class="form-control campo-input" id="edit-fechafallecimiento" name="fechafallecimiento" required>
+                                <input type="date" class="form-control campo-input" id="edit-fechafallecimiento"
+                                    name="fechafallecimiento" required>
                             </div>
                         </div>
-                        
+
                         <div class="row g-3 mb-3">
                             <div class="col-md-6">
                                 <label for="edit-ubicacion" class="form-label">Ubicación</label>
@@ -351,28 +380,55 @@
                             </div>
                             <div class="col-md-6">
                                 <label for="edit-maps" class="form-label">Google Maps</label>
-                                <input type="text" class="form-control campo-input" id="edit-maps" name="maps" placeholder="https://maps.google.com/...">
+                                <input type="text" class="form-control campo-input" id="edit-maps" name="maps"
+                                    placeholder="https://maps.google.com/...">
                             </div>
                         </div>
-                        
+
+                        <div class="row g-3 mb-3">
+                            <div class="col-md-12">
+                                <label for="edit-maps" class="form-label">Google Maps (URL)</label>
+                                <input type="text" class="form-control campo-input" id="edit-maps" name="maps"
+                                    placeholder="https://maps.google.com/...">
+                            </div>
+                        </div>
+
+                        <div class="row g-3 mb-3">
+                            <div class="col-md-6">
+                                <label for="edit-latitud" class="form-label">Latitud</label>
+                                <input type="text" class="form-control campo-input" id="edit-latitud" name="latitud"
+                                    placeholder="-33.0472">
+                                <small class="text-muted">Ejemplo: -33.0472</small>
+                            </div>
+                            <div class="col-md-6">
+                                <label for="edit-longitud" class="form-label">Longitud</label>
+                                <input type="text" class="form-control campo-input" id="edit-longitud" name="longitud"
+                                    placeholder="-71.6127">
+                                <small class="text-muted">Ejemplo: -71.6127</small>
+                            </div>
+                        </div>
+
                         <hr>
                         <h6 class="text-success mb-3"><i class="fas fa-users"></i> Datos del Familiar</h6>
-                        
+
                         <div class="row g-3 mb-3">
                             <div class="col-md-6">
                                 <label for="edit-nombre_familiar" class="form-label">Nombre del Familiar</label>
-                                <input type="text" class="form-control campo-input" id="edit-nombre_familiar" name="nombre_familiar">
+                                <input type="text" class="form-control campo-input" id="edit-nombre_familiar"
+                                    name="nombre_familiar">
                             </div>
                             <div class="col-md-6">
                                 <label for="edit-email_familiar" class="form-label">Email</label>
-                                <input type="email" class="form-control campo-input" id="edit-email_familiar" name="email_familiar">
+                                <input type="email" class="form-control campo-input" id="edit-email_familiar"
+                                    name="email_familiar">
                             </div>
                         </div>
-                        
+
                         <div class="row g-3 mb-3">
                             <div class="col-md-6">
                                 <label for="edit-telefono_familiar" class="form-label">Teléfono</label>
-                                <input type="tel" class="form-control campo-input" id="edit-telefono_familiar" name="telefono_familiar">
+                                <input type="tel" class="form-control campo-input" id="edit-telefono_familiar"
+                                    name="telefono_familiar">
                             </div>
                             <div class="col-md-6">
                                 <label for="edit-parentesco" class="form-label">Parentesco</label>
@@ -389,8 +445,10 @@
                         </div>
                     </div>
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal"><i class="fas fa-times"></i> Cerrar</button>
-                        <button type="submit" class="btn btn-primary"><i class="fas fa-save"></i> Guardar Cambios</button>
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal"><i
+                                class="fas fa-times"></i> Cerrar</button>
+                        <button type="submit" class="btn btn-primary"><i class="fas fa-save"></i> Guardar
+                            Cambios</button>
                     </div>
                 </form>
             </div>
@@ -412,13 +470,15 @@
             document.getElementById('edit-segundo_nombre').value = button.getAttribute('data-segundo_nombre') || '';
             document.getElementById('edit-apellido_p').value = button.getAttribute('data-apellido_p');
             document.getElementById('edit-apellido_m').value = button.getAttribute('data-apellido_m');
-            
+
             const fechafallecimiento = button.getAttribute('data-fechafallecimiento');
             document.getElementById('edit-fechafallecimiento').value = fechafallecimiento || '';
-            
+
             document.getElementById('edit-ubicacion').value = button.getAttribute('data-ubicacion');
             document.getElementById('edit-maps').value = button.getAttribute('data-maps');
-            
+            document.getElementById('edit-latitud').value = button.getAttribute('data-latitud') || '';
+            document.getElementById('edit-longitud').value = button.getAttribute('data-longitud') || '';
+
             // Datos del familiar
             document.getElementById('edit-nombre_familiar').value = button.getAttribute('data-nombre_familiar') || '';
             document.getElementById('edit-email_familiar').value = button.getAttribute('data-email_familiar') || '';
@@ -427,7 +487,9 @@
         });
     </script>
 
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
+        crossorigin="anonymous"></script>
 
     <!-- Script para formatear y validar RUT chileno -->
     <script>
@@ -461,7 +523,7 @@
         }
 
         function aplicarFormatoRUT(input) {
-            input.addEventListener('input', function(e) {
+            input.addEventListener('input', function (e) {
                 let cursorPos = this.selectionStart;
                 let valorAnterior = this.value;
                 this.value = formatearRUT(this.value);
@@ -471,7 +533,7 @@
                 this.setSelectionRange(cursorPos, cursorPos);
             });
 
-            input.addEventListener('blur', function() {
+            input.addEventListener('blur', function () {
                 if (this.value && !validarRUT(this.value)) {
                     this.classList.add('is-invalid');
                     if (!this.nextElementSibling || !this.nextElementSibling.classList.contains('invalid-feedback')) {
@@ -488,12 +550,12 @@
                 }
             });
 
-            input.addEventListener('focus', function() {
+            input.addEventListener('focus', function () {
                 this.classList.remove('is-invalid');
             });
         }
 
-        document.addEventListener('DOMContentLoaded', function() {
+        document.addEventListener('DOMContentLoaded', function () {
             const rutInput = document.getElementById('rut');
             if (rutInput) aplicarFormatoRUT(rutInput);
             const editRutInput = document.getElementById('edit-rut');
@@ -503,7 +565,7 @@
         });
 
         document.querySelectorAll('form').forEach(form => {
-            form.addEventListener('submit', function(e) {
+            form.addEventListener('submit', function (e) {
                 const rutInputs = this.querySelectorAll('input[name="rut"]');
                 let rutValido = true;
                 rutInputs.forEach(input => {
@@ -526,7 +588,8 @@
         });
     </script>
 </body>
-<footer>    
+<footer>
     {% include "includes/footer.html" %}
 </footer>
+
 </html>

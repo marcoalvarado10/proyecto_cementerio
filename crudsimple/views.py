@@ -205,6 +205,21 @@ def export_to_excel(fallecidos, title):
     workbook.save(response)
     return response
 
+@login_required
+def mapa_tumba(request, id):
+    """
+    Muestra el mapa con la ubicación exacta de la tumba
+    """
+    from django.conf import settings
+    
+    fallecido = get_object_or_404(Fallecido, id=id)
+    
+    context = {
+        'fallecido': fallecido,
+        'GOOGLE_MAPS_API_KEY': settings.GOOGLE_MAPS_API_KEY,
+    }
+    return render(request, 'mapa_tumba.html', context)
+
 
 def historias(request):
     return render(request, 'historias.html')

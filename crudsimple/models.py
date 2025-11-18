@@ -27,8 +27,12 @@ class Fallecido(models.Model):
     fechafallecimiento = models.DateField(blank=True, null=True)
     ubicacion = models.CharField(max_length=50, choices=UBICACION_CHOICES, blank=True)
     maps = models.CharField(max_length=500, blank=True)
-    fecha_registro = models.DateTimeField(auto_now_add=True, verbose_name="Fecha de Registro")  # 👈 NUEVA LÍNEA
-
+    
+    # Coordenadas GPS
+    latitud = models.DecimalField(max_digits=10, decimal_places=8, null=True, blank=True, verbose_name="Latitud")
+    longitud = models.DecimalField(max_digits=11, decimal_places=8, null=True, blank=True, verbose_name="Longitud")
+    
+    fecha_registro = models.DateTimeField(auto_now_add=True, verbose_name="Fecha de Registro")
     
     # Datos del familiar responsable
     nombre_familiar = models.CharField(max_length=200, verbose_name="Nombre del Familiar", blank=True, null=True)

@@ -38,6 +38,8 @@ urlpatterns = [
     path('historias/', views.historias, name='historias'),
 
     path('sobrenosotros/', views.sobrenosotros, name='sobrenosotros'),
+    
+    path('mapa/<int:id>/', views.mapa_tumba, name='mapa_tumba'),
 
 ]
 

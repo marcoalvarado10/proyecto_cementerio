@@ -7,12 +7,15 @@ class FormFallecido(forms.ModelForm):
         fields = [
             'rut', 'nombre', 'segundo_nombre', 'apellido_p', 'apellido_m',  # 👈 Agregar segundo_nombre
             'fechafallecimiento', 'ubicacion', 'maps',
+            'latitud', 'longitud',
             'nombre_familiar', 'email_familiar', 'telefono_familiar', 'parentesco'
         ]
         widgets = {
             'maps': forms.TextInput(attrs={'placeholder': 'https://maps.google.com/...'}),
             'email_familiar': forms.EmailInput(attrs={'placeholder': 'ejemplo@correo.com'}),
             'telefono_familiar': forms.TextInput(attrs={'placeholder': '+56 9 1234 5678'}),
+            'latitud': forms.HiddenInput(), 
+            'longitud': forms.HiddenInput(),
         }
 
 class FallecidoFilterForm(forms.Form):
