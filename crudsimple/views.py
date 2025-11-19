@@ -48,13 +48,14 @@ def listadoFallecidos(request):
     context = {
         'fallecidos': fallecidos,
         'filter_form': filter_form,
+        'today': timezone.now().date().isoformat(),
     }
     return render(request, 'fallecidos.html', context)
 
 @login_required
 def agregarFallecido(request):
     if request.method == 'POST':
-        form = FormFallecido(request.POST)
+        form = FormFallecido(request.POST, request.FILES)  # Agregar request.FILES
         rut = request.POST.get('rut')
 
         if Fallecido.objects.filter(rut=rut).exists():
@@ -72,6 +73,14 @@ def agregarFallecido(request):
             return redirect('listadoFallecidos')
 
     return redirect('listadoFallecidos')
+@login_required
+def detalle_fallecido(request, id):
+    fallecido = get_object_or_404(Fallecido, id=id)
+    context = {
+        'fallecido': fallecido,
+    }
+    return render(request, 'detalle_fallecido.html', context)
+
 
 @login_required
 def actualizarFallecido(request, id):

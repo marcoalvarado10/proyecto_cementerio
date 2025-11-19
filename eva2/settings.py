@@ -132,3 +132,7 @@ DEFAULT_FROM_EMAIL = 'tu_correo@gmail.com'
 # GOOGLE MAPS CONFIGURATION
 # ============================================
 GOOGLE_MAPS_API_KEY = 'AIzaSyCvH1KUqAJ1Jp7QesGPRRKjH9EeBXXXra0'
+
+# Media Files (Fotos)
+MEDIA_URL = '/media/'
+MEDIA_ROOT = BASE_DIR / 'media'

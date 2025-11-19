@@ -31,6 +31,8 @@ class Fallecido(models.Model):
     # Coordenadas GPS
     latitud = models.DecimalField(max_digits=10, decimal_places=8, null=True, blank=True, verbose_name="Latitud")
     longitud = models.DecimalField(max_digits=11, decimal_places=8, null=True, blank=True, verbose_name="Longitud")
+    foto = models.ImageField(upload_to='fotos_fallecidos/', blank=True, null=True, verbose_name="Foto")
+    historia = models.TextField(blank=True, null=True, verbose_name="Historia")
     
     fecha_registro = models.DateTimeField(auto_now_add=True, verbose_name="Fecha de Registro")
     

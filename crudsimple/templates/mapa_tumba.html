@@ -13,6 +13,7 @@
             height: 600px;
             width: 100%;
             border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
         }
 
         .info-card {
@@ -20,6 +21,7 @@
             padding: 20px;
             border-radius: 10px;
             margin-bottom: 20px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
         }
     </style>
 </head>
@@ -28,9 +30,16 @@
     <div class="container mt-4">
         <div class="info-card">
             <h2><i class="fas fa-map-marker-alt text-danger"></i> Ubicación de la Tumba</h2>
-            <h4>{{ fallecido.nombre }} {{ fallecido.apellido_p }}</h4>
+            <h4>{{ fallecido.nombre }} {{ fallecido.apellido_p }} {{ fallecido.apellido_m }}</h4>
             <p><strong>RUT:</strong> {{ fallecido.rut }}</p>
-            <a href="{% url 'listadoFallecidos' %}" class="btn btn-secondary">Volver</a>
+            <p><strong>Ubicación:</strong> {{ fallecido.ubicacion }}</p>
+            <a href="{% url 'listadoFallecidos' %}" class="btn btn-secondary">
+                <i class="fas fa-arrow-left"></i> Volver
+            </a>
+            <a href="https://www.google.com/maps/dir/?api=1&destination={{ fallecido.latitud }},{{ fallecido.longitud }}"
+                target="_blank" class="btn btn-primary">
+                <i class="fas fa-directions"></i> Cómo Llegar
+            </a>
         </div>
         <div class="info-card">
             <div id="map"></div>
@@ -39,22 +48,32 @@
 
     <script>
         function initMap() {
-            const tumbaLocation = { lat: {{ fallecido.latitud }
-        }, lng: { { fallecido.longitud } } };
-        const map = new google.maps.Map(document.getElementById("map"), {
-            zoom: 18,
-            center: tumbaLocation,
-            mapTypeId: 'satellite',
-        });
-        new google.maps.Marker({
-            position: tumbaLocation,
-            map: map,
-            title: "{{ fallecido.nombre }}"
-        });
+            const lat = parseFloat("{{ fallecido.latitud }}");
+            const lng = parseFloat("{{ fallecido.longitud }}");
+
+            const tumbaLocation = { lat: lat, lng: lng };
+
+            const map = new google.maps.Map(document.getElementById("map"), {
+                zoom: 18,
+                center: tumbaLocation,
+                mapTypeId: 'satellite'
+            });
+
+            const marker = new google.maps.Marker({
+                position: tumbaLocation,
+                map: map,
+                title: "{{ fallecido.nombre }} {{ fallecido.apellido_p }}"
+            });
+
+            const infoWindow = new google.maps.InfoWindow({
+                content: '<div style="padding:10px;"><h5>{{ fallecido.nombre }} {{ fallecido.apellido_p }}</h5><p>{{ fallecido.ubicacion }}</p></div>'
+            });
+
+            infoWindow.open(map, marker);
         }
-        window.initMap = initMap;
     </script>
-    <script src="https://maps.googleapis.com/maps/api/js?key={{ GOOGLE_MAPS_API_KEY }}&callback=initMap"></script>
+    <script async defer
+        src="https://maps.googleapis.com/maps/api/js?key={{ GOOGLE_MAPS_API_KEY }}&callback=initMap"></script>
 </body>
 
 </html>

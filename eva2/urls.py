@@ -2,6 +2,8 @@ from django.urls import path
 from django.contrib.auth import views as auth_views
 from crudsimple import views
 from django.contrib.auth.views import LogoutView
+from django.conf import settings
+from django.conf.urls.static import static
 
 urlpatterns = [
     path('', views.index, name='index'),
@@ -40,6 +42,10 @@ urlpatterns = [
     path('sobrenosotros/', views.sobrenosotros, name='sobrenosotros'),
     
     path('mapa/<int:id>/', views.mapa_tumba, name='mapa_tumba'),
+    
+    path('detalle/<int:id>/', views.detalle_fallecido, name='detalle_fallecido'),
 
 ]
 
+if settings.DEBUG:
+    urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
