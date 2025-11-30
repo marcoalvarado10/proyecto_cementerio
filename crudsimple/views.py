@@ -1,15 +1,14 @@
 from django.shortcuts import render, redirect, get_object_or_404
-from crudsimple.forms import FormFallecido ,FallecidoFilterForm
+from crudsimple.forms import FormFallecido, FallecidoFilterForm
 from crudsimple.models import Fallecido
 from django.contrib.auth.decorators import login_required
-from django.http import JsonResponse
+from django.http import JsonResponse, HttpResponse
 from django.contrib import messages
 from django.utils import timezone
-from django.db.models import Q
-from django.db.models import Count
-from datetime import timedelta
+from django.db.models import Q, Count, Value
+from django.db.models.functions import Replace
+from datetime import timedelta, datetime
 from openpyxl import Workbook
-from django.http import HttpResponse
 
 def index(request):
     return render(request, 'index.html')
@@ -55,7 +54,7 @@ def listadoFallecidos(request):
 @login_required
 def agregarFallecido(request):
     if request.method == 'POST':
-        form = FormFallecido(request.POST, request.FILES)  # Agregar request.FILES
+        form = FormFallecido(request.POST, request.FILES)
         rut = request.POST.get('rut')
 
         if Fallecido.objects.filter(rut=rut).exists():
@@ -68,26 +67,29 @@ def agregarFallecido(request):
             from crudsimple.whatsapp_utils import generar_link_whatsapp
             whatsapp_link = generar_link_whatsapp(fallecido)
             
-            messages.success(request, f"✅ Fallecido agregado exitosamente. <a href='{whatsapp_link}' target='_blank' class='btn btn-success btn-sm ms-2'><i class='fab fa-whatsapp'></i> Enviar WhatsApp</a>", extra_tags='safe')
-            
+            messages.success(
+                request, 
+                f"✅ Fallecido agregado exitosamente. "
+                f"<a href='{whatsapp_link}' target='_blank' class='btn btn-success btn-sm ms-2'>"
+                f"<i class='fab fa-whatsapp'></i> Enviar WhatsApp</a>", 
+                extra_tags='safe'
+            )
             return redirect('listadoFallecidos')
 
     return redirect('listadoFallecidos')
+
 @login_required
 def detalle_fallecido(request, id):
     fallecido = get_object_or_404(Fallecido, id=id)
-    context = {
-        'fallecido': fallecido,
-    }
+    context = {'fallecido': fallecido}
     return render(request, 'detalle_fallecido.html', context)
-
 
 @login_required
 def actualizarFallecido(request, id):
     fallecido = get_object_or_404(Fallecido, id=id)
 
     if request.method == 'POST':
-        form = FormFallecido(request.POST, instance=fallecido)
+        form = FormFallecido(request.POST, request.FILES, instance=fallecido)
         if form.is_valid():
             form.save()
             messages.success(request, "Fallecido actualizado exitosamente.")
@@ -112,46 +114,70 @@ def buscar_fallecido(request):
     apellido_m = request.GET.get('apellido_m', '').strip()
     rut = request.GET.get('rut', '').strip()
 
-    fallecidos = Fallecido.objects.all()
-
-    if nombre:
-        fallecidos = fallecidos.filter(nombre__icontains=nombre)
-    
-    if apellido_p:
-        fallecidos = fallecidos.filter(apellido_p__icontains=apellido_p)
-    
-    if apellido_m:
-        fallecidos = fallecidos.filter(apellido_m__icontains=apellido_m)
-    
+    # Búsqueda por RUT tiene prioridad
     if rut:
-        rut_limpio = rut.replace('.', '').replace('-', '')
-        fallecidos = fallecidos.filter(rut__icontains=rut_limpio)
+        rut_limpio = rut.replace('.', '').replace('-', '').replace(' ', '').upper()
+        fallecidos = Fallecido.objects.annotate(
+            rut_limpio=Replace(
+                Replace(
+                    Replace('rut', Value('.'), Value('')),
+                    Value('-'), Value('')
+                ),
+                Value(' '), Value('')
+            )
+        ).filter(rut_limpio__icontains=rut_limpio)
+    else:
+        # Validación: Debe tener nombre y al menos un apellido
+        if nombre and not (apellido_p or apellido_m):
+            return JsonResponse({
+                'error': 'Para buscar por nombre debes ingresar al menos un apellido',
+                'resultados': []
+            })
 
-    if not (nombre or apellido_p or apellido_m or rut):
-        fallecidos = Fallecido.objects.none()
+        if not (nombre or apellido_p or apellido_m):
+            return JsonResponse({
+                'error': 'Debes ingresar al menos un criterio de búsqueda',
+                'resultados': []
+            })
 
-    resultados = list(fallecidos.values())
+        fallecidos = Fallecido.objects.all()
+        if nombre:
+            fallecidos = fallecidos.filter(nombre__icontains=nombre)
+        if apellido_p:
+            fallecidos = fallecidos.filter(apellido_p__icontains=apellido_p)
+        if apellido_m:
+            fallecidos = fallecidos.filter(apellido_m__icontains=apellido_m)
+
+    fallecidos = fallecidos[:20]
+
+    resultados = []
+    for fallecido in fallecidos:
+        resultados.append({
+            'id': fallecido.id,
+            'rut': fallecido.rut,
+            'nombre': fallecido.nombre,
+            'segundo_nombre': fallecido.segundo_nombre or '',
+            'apellido_p': fallecido.apellido_p,
+            'apellido_m': fallecido.apellido_m,
+            'fechafallecimiento': fallecido.fechafallecimiento.strftime('%d-%m-%Y') if fallecido.fechafallecimiento else '',
+            'ubicacion': fallecido.ubicacion,
+            'foto_url': fallecido.foto.url if fallecido.foto else None,
+            'historia': (fallecido.historia[:200] + '...') if fallecido.historia and len(fallecido.historia) > 200 else (fallecido.historia or 'Sin historia registrada'),
+        })
+    
     return JsonResponse({'resultados': resultados})
 
 @login_required
 def dashboard(request):
-    from datetime import datetime
-    
     total_fallecidos = Fallecido.objects.count()
-    
-    # Fallecidos REGISTRADOS hoy (usando __date ignora la zona horaria)
     hoy = datetime.now().date()
     fallecidos_hoy = Fallecido.objects.filter(fecha_registro__date=hoy).count()
-    
-    # Consulta para obtener la ubicación con más fallecidos
     ubicacion_mas_fallecidos = (
         Fallecido.objects.values('ubicacion')
         .annotate(total=Count('id'))
         .order_by('-total')
         .first()
     )
-    
-    # Consulta para obtener el número de fallecidos registrados en la última semana
     una_semana_atras = timezone.now() - timedelta(days=7)
     fallecidos_ultima_semana = Fallecido.objects.filter(fecha_registro__gte=una_semana_atras).count()
 
@@ -162,7 +188,6 @@ def dashboard(request):
         'fallecidos_ultima_semana': fallecidos_ultima_semana,
     }
     return render(request, 'dashboard.html', context)
-
 
 def export_total_fallecidos(request):
     fallecidos = Fallecido.objects.all()
@@ -200,7 +225,7 @@ def export_to_excel(fallecidos, title):
     worksheet.append(headers)
 
     for fallecido in fallecidos:
-        row = [
+        worksheet.append([
             fallecido.rut,
             fallecido.nombre,
             fallecido.apellido_p,
@@ -208,31 +233,23 @@ def export_to_excel(fallecidos, title):
             fallecido.fechafallecimiento,
             fallecido.ubicacion,
             fallecido.maps,
-        ]
-        worksheet.append(row)
+        ])
 
     workbook.save(response)
     return response
 
 @login_required
 def mapa_tumba(request, id):
-    """
-    Muestra el mapa con la ubicación exacta de la tumba
-    """
     from django.conf import settings
-    
     fallecido = get_object_or_404(Fallecido, id=id)
-    
     context = {
         'fallecido': fallecido,
         'GOOGLE_MAPS_API_KEY': settings.GOOGLE_MAPS_API_KEY,
     }
     return render(request, 'mapa_tumba.html', context)
 
-
 def historias(request):
     return render(request, 'historias.html')
-
 
 def sobrenosotros(request):
     return render(request, 'sobrenosotros.html')

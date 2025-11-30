@@ -6,6 +6,66 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{{ fallecido.nombre }} {{ fallecido.apellido_p }}</title>
+
+<style>
+    body {
+        background: 
+            linear-gradient(rgba(52, 73, 94, 0.85), rgba(44, 62, 80, 0.85)),
+            url('https://images.unsplash.com/photo-1481627834876-b7833e8f5570?w=1920&q=80') center/cover fixed;
+        min-height: 100vh;
+        padding: 20px 0;
+    }
+    
+    .container {
+        position: relative;
+        z-index: 1;
+    }
+    
+    .card {
+        background: rgba(255, 255, 255, 0.98);
+        backdrop-filter: blur(15px);
+        border: none;
+        box-shadow: 0 15px 50px rgba(0, 0, 0, 0.4);
+        border-radius: 20px;
+        overflow: hidden;
+        position: relative;
+    }
+    
+    .card::before {
+        content: '🕊️';
+        position: absolute;
+        top: 10px;
+        right: 20px;
+        font-size: 4rem;
+        opacity: 0.1;
+        z-index: 0;
+    }
+    
+    .card-header {
+        background: linear-gradient(135deg, #2c3e50 0%, #34495e 100%);
+        border: none;
+        position: relative;
+        z-index: 1;
+    }
+    
+    .card-body {
+        position: relative;
+        z-index: 1;
+    }
+    
+    /* Decoración floral */
+    .card-header::after {
+        content: '🌹';
+        position: absolute;
+        right: 15px;
+        top: 50%;
+        transform: translateY(-50%);
+        font-size: 2rem;
+        opacity: 0.3;
+    }
+</style>
+    <!-- 🔹 FIN DEL ESTILO AGREGADO -->
+
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
     <link rel="stylesheet" href="{% static 'css/styles.css' %}">
@@ -41,10 +101,9 @@
                         <hr>
                         <p><strong><i class="fas fa-id-card"></i> RUT:</strong> {{ fallecido.rut }}</p>
                         <p><strong><i class="fas fa-calendar"></i> Fecha de Fallecimiento:</strong>
-                            {{fallecido.fechafallecimiento|date:"d-m-Y" }}</p>
+                            {{ fallecido.fechafallecimiento|date:"d-m-Y" }}</p>
                         <p><strong><i class="fas fa-map-marker-alt"></i> Ubicación:</strong> {{ fallecido.ubicacion }}
                         </p>
-
 
                         {% if fallecido.historia %}
                         <hr>
@@ -62,7 +121,7 @@
                         <p><strong>Parentesco:</strong> {{ fallecido.parentesco }}</p>
 
                         <div class="mt-4">
-                            <a href="{% url 'listadoFallecidos' %}" class="btn btn-secondary">
+                            <a href="javascript:history.back()" class="btn btn-secondary">
                                 <i class="fas fa-arrow-left"></i> Volver
                             </a>
                             {% if fallecido.latitud and fallecido.longitud %}
@@ -79,6 +138,7 @@
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 </body>
+
 <footer>
     {% include "includes/footer.html" %}
 </footer>
